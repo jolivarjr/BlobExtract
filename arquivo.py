@@ -1,5 +1,12 @@
 import ntpath
 import pyodbc
+import os
+
+# Caminho da pasta onde os arquivos serão salvos
+diretorio_destino = './'  # Altere para o caminho desejado
+
+# Verifica se a pasta existe, se não, cria
+os.makedirs(diretorio_destino, exist_ok=True)
 
 # Configuração da conexão com o banco de dados
 conn = pyodbc.connect(
@@ -33,8 +40,11 @@ with conn.cursor() as cursor:
             nome_arquivo = ntpath.basename(nome_arquivo) if nome_arquivo else f"file_{contador}.pdf"
             contador += 1
             
-            with open(nome_arquivo, 'wb') as file:
+            # Definir o caminho completo para salvar o arquivo
+            caminho_arquivo = os.path.join(diretorio_destino, nome_arquivo)
+            
+            with open(caminho_arquivo, 'wb') as file:
                 file.write(conteudo)
-            print(f"Arquivo {nome_arquivo} salvo com sucesso!")
+            print(f"Arquivo {nome_arquivo} salvo com sucesso em {diretorio_destino}!")
     else:
         print("Nenhum registro encontrado.")
